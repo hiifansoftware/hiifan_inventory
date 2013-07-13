@@ -27,7 +27,7 @@
         }
         ?>
         <!-- <a href="<?=__SITE_URL?>terminal/view_terminal/" class="menu_button" id=""terminal>Manage Terminal</a> -->
-        <a href="<?=__SITE_URL?>report/view_report/" class="menu_button" id="report">Manage Reports</a>        
+        <a href="<?=__SITE_URL?>admin/index/#reports" class="menu_button" id="report">Manage Reports</a>        
         <a href="<?=__SITE_URL?>settings/view_setting/" class="menu_button" id="settings">Manage Settings</a>
         
     </td>

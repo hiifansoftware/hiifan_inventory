@@ -64,20 +64,31 @@ require_once("header.php");
                                                                 <table width="100%" border="0" cellpadding="5" cellspacing="5" align="center" class="list_table">
                                                                     <tr>
                                                                         <th>Sl No.</th>
+                                                                        <th>Code</th>
                                                                         <th>Product Name</th>
                                                                         <th>Category Name</th>
-                                                                        <th>Category Status</th>
+                                                                        <th>Quantity</th>
+                                                                        <th>Status</th>
                                                                         <th>Add Date</th>
                                                                         <th>Action</th>
                                                                     </tr>
                                                                     <?php
                                                                     foreach ($ProductArray['result_set'] as $prodKey => $prodArray) {
                                                                         $i++;
+                                                                        $barcodeValue = Barcode::code128BarCode($prodArray['product_code']);
+                                                                        ob_start();
+                                                                        imagepng($barcodeValue);
+
+                                                                                //Get the image from the output buffer
+
+                                                                        $output_img	=	ob_get_clean();
                                                                         ?>
                                                                         <tr>
                                                                             <td><?= $i ?></td>
+                                                                            <td><img src="data:image/png;base64, <?php echo base64_encode($output_img) ?>" /></td>
                                                                             <td><?= ucwords($prodArray['product_name']) ?></td>
                                                                             <td><?= ucwords($prodArray['product_category_name']) ?></td>
+                                                                            <td><?= $prodArray['product_quantity'] ?></td>
                                                                             <td><?= ucwords($prodArray['product_status']) ?></td>
                                                                             <td><?= General::getFormatedDate($prodArray['product_datetime']) ?></td>
                                                                             <td><a title="Delete Product"

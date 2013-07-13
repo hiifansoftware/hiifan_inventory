@@ -109,4 +109,20 @@ class Validation
         }
         return false;
     }
+    
+    /**
+     * @purpose: This function checks for the float value
+     * @author: Saurabh Sinha
+     * @param type $val
+     * @return type
+     */
+    public function isTrueFloat($val)
+    {
+        $valueArray = explode('.', $val);
+        if(is_numeric($valueArray[0]) && is_numeric($valueArray[1]))
+        {
+            return true;
+        }
+        return false;
+    } 
 }

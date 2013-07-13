@@ -116,6 +116,9 @@ require __HELPER_PATH . 'class.BreadCrumbs.php';
 //This is the Cache Class
 require __HELPER_PATH . 'class.CacheHandler.php';
 
+//This is the Barcode Class
+require __HELPER_PATH . 'class.Barcode.php';
+
 /* ************************* Start: This is to manage the Template for the Application ******************** */
 
 define ('__TEMPLATE_NAME', $__template_name);

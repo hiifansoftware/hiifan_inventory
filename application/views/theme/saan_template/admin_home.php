@@ -76,7 +76,7 @@ require_once("header.php");
                                                 <td align="center" valign="top"></td>
                                                 <td>&nbsp;</td>
                                               </tr>
-                                              <tr><td colspan="6"><h3>Report Module</h3></td></tr>
+                                              <tr id="reports"><td colspan="6"><h3>Report Module</h3></td></tr>
                                               <tr>
                                                 <td align="center" valign="top"><img src="<?=__TEMPLATE_URL?>images/icons/transaction.jpg"></td>
                                                 <td align="center" valign="top"><img src="<?=__TEMPLATE_URL?>images/icons/transaction.jpg"></td>

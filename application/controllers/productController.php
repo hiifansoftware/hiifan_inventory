@@ -79,13 +79,26 @@ class productController extends SaanController
                         }
                     }
                 }
+                if(!is_numeric($postArray['product_quantity']) || $postArray['product_quantity'] > 10000)
+                {
+                    $_SESSION['error'][] = "Product Quantity can only have numeric values less than 10000";
+                }
+                
+                if($this->registry->validation->isTrueFloat($postArray['product_price']) === false)
+                {
+                    $_SESSION['error'][] = "Product Price can only be decimal value";
+                }
                 if(count($_SESSION['error']) == 0)
                 {
                     $postArray['product_datetime'] = time();
                     if($lastProductId = $this->registry->model->run('addNewProduct', $postArray))
                     {
+                        $productArray['product_id'] = $lastProductId;
+                        $productArray['product_code'] = "PRO-" . $lastProductId;
+                        if($this->registry->model->run('updateProductByPid', $productArray))
                         $_SESSION['success'] = "Product added successfully";
                         General::Redirect(__SITE_URL . '/product/add_product');
+                        exit;
                     }
                 }
                 else
@@ -137,6 +150,14 @@ class productController extends SaanController
                             $_SESSION['error'][] = ucwords(str_replace("_", " ", $postKey)) . " is a required field";
                         }
                     }
+                }
+                if(!is_numeric($postArray['product_quantity']) || $postArray['product_quantity'] > 10000)
+                {
+                    $_SESSION['error'][] = "Product Quantity can only have numeric values less than 10000";
+                }
+                if($this->registry->validation->isTrueFloat($postArray['product_price']) === false)
+                {
+                    $_SESSION['error'][] = "Product Price can only be decimal value";
                 }
                 if(count($_SESSION['error']) == 0)
                 {

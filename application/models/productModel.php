@@ -34,6 +34,7 @@ class productModel extends SaanModel
         {
             $dataArray = array('product_name' => $postArray['product_name'],
                                 'product_desc' => $postArray['product_desc'],
+                                'product_quantity' => $postArray['product_quantity'],
                                 'product_status' => $postArray['product_status'],
                                 'product_datetime' => $postArray['product_datetime'],
                                 'product_category_id'=> $postArray['product_category_name']);
@@ -47,6 +48,7 @@ class productModel extends SaanModel
         {
             $query = "UPDATE product_details SET product_name = '" . $postArray['product_name'] . "',
                                                 product_desc = '" . $postArray['product_desc'] . "',
+                                                product_quantity = '" . $postArray['product_quantity'] . "',
                                                 product_category_id = '" . $postArray['product_category_id'] . "',
                                                 product_status = '" . $postArray['product_status'] . "'
                                                     WHERE product_id = '" . $postArray['product_id'] . "'";
@@ -94,6 +96,15 @@ class productModel extends SaanModel
     {
         $query = "SELECT * FROM product_category_details WHERE product_category_status = 'active' ORDER BY product_category_id DESC";
         return $this->db->fetch_rows($query);
+    }
+    
+    public function updateProductByPid($args)
+    {
+        if(is_array($args) && count($args) > 0)
+        {
+            $query = "UPDATE product_details SET product_code = '" . $args['product_code'] . "' WHERE product_id = '" . $args['product_id'] . "'";
+            return $this->db->query($query);
+        }
     }
 }
 

@@ -50,6 +50,18 @@ require_once("header.php");
                             <td><input type="text" name="product_name" id="product_name" value="<?=$RetainArray['product_name']?>"></td>
                           </tr>
                           <tr>
+                            <td>Product Quantity:</td>
+                          </tr>
+                          <tr>
+                            <td><input type="text" name="product_quantity" id="product_quantity" value="<?=$RetainArray['product_quantity']?>"></td>
+                          </tr>
+                          <tr>
+                            <td>Product Price:</td>
+                          </tr>
+                          <tr>
+                            <td><input type="text" name="product_price" id="product_price" value="<?=$RetainArray['product_price']?>"></td>
+                          </tr>
+                          <tr>
                             <td>Category Name:</td>
                           </tr>
                           <tr>
