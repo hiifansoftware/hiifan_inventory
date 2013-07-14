@@ -53,21 +53,83 @@ class customerController extends SaanController{
                     }
                     if(count($_SESSION['error']) == 0)
                     {
-                        $cardnumberArray = $this->registry->model->run('getFreshCard');
-                        if(is_array($cardnumberArray) && count($cardnumberArray) > 0)
+                        $settingArray['setting_name'] = 'store_type';
+                        $settingArray = $this->registry->model->run('getSettingBySettingName', $settingArray);
+                     
+                        if(is_array($settingArray) && count($settingArray) > 0)
                         {
-                            $postArray['customer_card_number'] = $cardnumberArray[0]['cardnumber_value'];
-                            if(isset($cardnumberArray[0]['cardnumber_value']) && $cardnumberArray[0]['cardnumber_value'] != '')
+                            if($settingArray[0]['setting_value'] == 'offline')
                             {
-                                $postArray['customer_reg_date'] = time();
-                                $postArray['customer_dob'] = strtotime($postArray['customer_dob']);
-                                unset($postArray['btnSubmit']);
-                                $customerNum = $this->registry->model->run('getCustomerByEmailnDOB', $postArray);
+                                $cardnumberArray = $this->registry->model->run('getFreshCard');
+                                if(is_array($cardnumberArray) && count($cardnumberArray) > 0)
+                                {
+                                    $postArray['customer_card_number'] = $cardnumberArray[0]['cardnumber_value'];
+                                    if(isset($cardnumberArray[0]['cardnumber_value']) && $cardnumberArray[0]['cardnumber_value'] != '')
+                                    {
+                                        $postArray['customer_reg_date'] = time();
+                                        $postArray['customer_dob'] = strtotime($postArray['customer_dob']);
+                                        unset($postArray['btnSubmit']);
+                                        $customerNum = $this->registry->model->run('getCustomerByEmail', $postArray);
+                                        if($customerNum < 1)
+                                        {
+                                            if($this->registry->model->run('addNewCustomer', $postArray))
+                                            {
+                                                if($this->registry->model->run('updateFreshCard', $postArray))
+                                                {
+                                                    $_SESSION['success'] = "New customer Added Succesfully with Card Number: <strong>" . $postArray['customer_card_number'] . "</strong>";
+                                                    General::jsRedirect($_SERVER['HTTP_REFERER']);
+                                                    exit;
+                                                }
+                                                else
+                                                {
+                                                    $_SESSION['error'][] = "Problem with registration. Please Try Again";
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            $_SESSION['error'][] = "Email Address and DOB is already prenset in Database";
+                                        }
+
+                                    }
+                                    else
+                                    {
+                                        $_SESSION['error'][] = "Registration Incomplete as there is no cardnumber to assign to the customer.";
+                                    }
+                                }
+                                else
+                                {
+                                    $_SESSION['error'][] = "Registration Incomplete as there is no cardnumber to assign to the customer.";
+                                }
+                            }
+                            else if($settingArray[0]['setting_value'] == 'online')
+                            {
+                                $customerNum = $this->registry->model->run('getCustomerByEmail', $postArray);
                                 if($customerNum < 1)
                                 {
-                                    if($this->registry->model->run('addNewCustomer', $postArray))
+                                    $url = 'http://www.hiifan.com/api/newCardEntry/';
+
+                                    $fields = array('email_address' => $this->registry->security->encryptData($postArray['customer_email']));
+                                    $fields_string = '';
+                                    foreach($fields as $key=>$value) { $fields_string .= $key.'='.$value.'&'; }
+                                    rtrim($fields_string, '&');
+                                    $ch = curl_init();
+                                    //set the url, number of POST vars, POST data
+                                    curl_setopt($ch,CURLOPT_URL, $url);
+                                    curl_setopt($ch,CURLOPT_POST, count($fields));
+                                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                                    curl_setopt($ch,CURLOPT_POSTFIELDS, $fields_string);
+                                    $result = curl_exec($ch);
+                                    $resultArray = json_decode($result);
+                                    $registerStatus = $this->registry->security->decryptData($resultArray->output);
+                                    $statusArray = explode('-^-', $registerStatus);
+                                    if($statusArray[0] == 'success')
                                     {
-                                        if($this->registry->model->run('updateFreshCard', $postArray))
+                                        $postArray['customer_card_number'] = $statusArray[1];
+                                        $postArray['customer_reg_date'] = time();
+                                        $postArray['customer_dob'] = strtotime($postArray['customer_dob']);
+                                        unset($postArray['btnSubmit']);
+                                        if($this->registry->model->run('addNewCustomer', $postArray))
                                         {
                                             $_SESSION['success'] = "New customer Added Succesfully with Card Number: <strong>" . $postArray['customer_card_number'] . "</strong>";
                                             General::jsRedirect($_SERVER['HTTP_REFERER']);
@@ -75,7 +137,7 @@ class customerController extends SaanController{
                                         }
                                         else
                                         {
-                                            $_SESSION['error'][] = "Problem with registration. Please Try Again";
+                                            $_SESSION['error'][] = "Problem Registering customer. Please Try Again";
                                         }
                                     }
                                 }
@@ -83,16 +145,7 @@ class customerController extends SaanController{
                                 {
                                     $_SESSION['error'][] = "Email Address and DOB is already prenset in Database";
                                 }
-                                
                             }
-                            else
-                            {
-                                $_SESSION['error'][] = "Registration Incomplete as there is no cardnumber to assign to the customer.";
-                            }
-                        }
-                        else
-                        {
-                            $_SESSION['error'][] = "Registration Incomplete as there is no cardnumber to assign to the customer.";
                         }
                     }
                     

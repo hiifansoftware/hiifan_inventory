@@ -76,6 +76,9 @@ class General
             if ($formatType == "dd-mm-yyyy") {
                 return date("d-m-Y", $timestampValue);
             }
+            if($formatType == "mm-dd-yyyy") {
+                return date("m/d/Y", $timestampValue);
+            }
         } else {
             return $timestampValue;
         }

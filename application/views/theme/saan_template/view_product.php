@@ -78,10 +78,7 @@ require_once("header.php");
                                                                         $barcodeValue = Barcode::code128BarCode($prodArray['product_code']);
                                                                         ob_start();
                                                                         imagepng($barcodeValue);
-
-                                                                                //Get the image from the output buffer
-
-                                                                        $output_img	=	ob_get_clean();
+                                                                        $output_img = ob_get_clean();
                                                                         ?>
                                                                         <tr>
                                                                             <td><?= $i ?></td>

@@ -73,7 +73,7 @@ require_once("header.php");
                                                       <td>Customer Date of Birth:</td>
                                                     </tr>
                                                     <tr>
-                                                      <td><input type="text" name="customer_dob" id="customer_dob" value="<?=$RetainArray['customer_dob']?>" class="tcal" readonly></td>
+                                                        <td><input type="text" name="customer_dob" id="customer_dob" value="<?=  General::getFormatedDate($RetainArray['customer_dob'], "mm-dd-yyyy")?>" class="tcal" readonly></td>
                                                     </tr>
                                                     <tr>
                                                         <td>Customer Status:</td>

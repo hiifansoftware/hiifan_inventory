@@ -39,10 +39,9 @@ class customerModel extends SaanModel{
         }
     }
     
-    public function getCustomerByEmailnDOB($args)
+    public function getCustomerByEmail($args)
     {
-        $query = "SELECT * FROM customer_details WHERE customer_email = '" . $args['customer_email'] . "'
-                                                    AND customer_dob = '" . $args['customer_dob'] . "'";
+        $query = "SELECT * FROM customer_details WHERE customer_email = '" . $args['customer_email'] . "'";
         return $this->db->num_rows($query);
     }
     
@@ -104,6 +103,12 @@ class customerModel extends SaanModel{
                 return $this->db->query_insert('recharge_details', $dataArray);
             }
         }
+    }
+    
+    public function getSettingBySettingName($settingName)
+    {
+        $query = "SELECT setting_value FROM setting_details WHERE setting_name = '" . $settingName['setting_name'] . "'";
+        return $this->db->fetch_rows($query);
     }
 }
 
