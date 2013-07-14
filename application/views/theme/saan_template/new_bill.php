@@ -2,6 +2,39 @@
 require_once("header.php");
 ?>
 <script language="javascript">
+    
+    function getHiddenInputs() {
+	    return $('.hidden_price_class').length;;
+    }
+    
+    function manageQuantityPrice(obj)
+    {
+        var quantityValue = obj.value;
+        var quantityId = obj.name;
+        var idValue = quantityId.substring(8);
+        var priceDiv = 'price' + idValue;
+        var hdnPrice = 'hdnPrice' + idValue;
+        var rateDiv = 'rate' + idValue;
+		var hiddenQuantity = 'hdnQuantity' + idValue;
+        var rateValue = document.getElementById(rateDiv).innerHTML;
+        var product_final_price = parseFloat(rateValue).toFixed(2) * parseInt(quantityValue);
+        
+		document.getElementById(hiddenQuantity).value = quantityValue;
+        document.getElementById(priceDiv).innerHTML = parseFloat(product_final_price).toFixed(2);
+        document.getElementById(hdnPrice).value = parseFloat(product_final_price).toFixed(2);
+        var hiddenCount = getHiddenInputs();
+        var totalPriceValue = 0;
+        for(var i = 1; i < hiddenCount; i++)
+        {
+            var hdnPriceId = 'hdnPrice' + i;
+            var hdnPriceValue = document.getElementById(hdnPriceId).value;
+            totalPriceValue = parseFloat(totalPriceValue) + parseFloat(hdnPriceValue);
+			
+        }
+        //document.getElementById('total_price').innerHTML = parseFloat(totalPriceValue).toFixed(2);
+        document.getElementById('total_price_value').value = parseFloat(totalPriceValue).toFixed(2);
+    }
+    
 $(document).ready(function(){
     $(document).on("blur", '.productCode', function(event){
        var productCode = $(this).val();
@@ -10,16 +43,19 @@ $(document).ready(function(){
        var rateDiv = '#rate' + idValue;
        var priceDiv = '#price' + idValue;
        var quantityDiv = '#quantity' + idValue;
+	   var hiddenRate = '#hdnRate' + idValue;
+	   var hiddenQuantity = '#hdnQuantity' + idValue;
        var quantity = 1;
        var newIdValue = ++idValue; 
        var total_price = $('#total_price').html();
+	   
        
        var newHTML = "<tr>"+
                         "<td align='left' valign='middle'><input name='"+newIdValue+"' id='"+newIdValue+"' value='' class='productCode'></td>"+
                         "<td align='left' valign='middle'><div id='product"+newIdValue+"'>&nbsp;</div></td>"+
-                        "<td align='left' valign='middle'><div id='quantity"+newIdValue+"'></div></td>"+
-                        "<td align='left' valign='middle'><div id='rate"+newIdValue+"'>&nbsp;</div></td>"+
-                        "<td align='left' valign='middle'><div id='price"+newIdValue+"'>&nbsp;</div></td>"+
+                        "<td align='left' valign='middle'><input name='quantity"+newIdValue+"' id='quantity"+newIdValue+"' value='' onblur='javascript:manageQuantityPrice(this);'><input type='hidden' id='hdnQuantity"+newIdValue+"' name='hdnQuantity"+newIdValue+"' value=''></td>"+
+                        "<td align='left' valign='middle'><div id='rate"+newIdValue+"'>&nbsp;</div><input type='hidden' id='hdnRate"+newIdValue+"' name='hdnRate"+newIdValue+"' value=''></td>"+
+                        "<td align='left' valign='middle'><div id='price"+newIdValue+"'>&nbsp;</div><input type='hidden' id='hdnPrice"+newIdValue+"' name='hdnPrice"+newIdValue+"' value='' class='hidden_price_class'></td>"+
                       "</tr>";
        if($('#' + newIdValue).length === 0)
         {
@@ -38,16 +74,23 @@ $(document).ready(function(){
                     {
                         var productArray = jQuery.parseJSON(msg);
                         $(productDiv).html(productArray.product_name);
+						
+						//Rate Value
                         $(rateDiv).html(parseFloat(productArray.product_price).toFixed(2));
-                        $(quantityDiv).html('01');
+						$(hiddenRate).val(parseFloat(productArray.product_price).toFixed(2));
+						
+						//Quantity Value
+                        $(quantityDiv).val('01');
+						$(hiddenQuantity).val('01');
 
                         var product_final_price = parseFloat(productArray.product_price).toFixed(2) * parseInt(quantity);
 
                         $(priceDiv).html(parseFloat(product_final_price).toFixed(2));
                         $('#bill_section').append(newHTML);
                         $('#'+ newIdValue).removeClass().addClass('productCode uniform-input text');
+                        $('#quantity'+ newIdValue).removeClass().addClass('uniform-input text');
                         total_price = parseFloat(total_price) + parseFloat(product_final_price);
-                        $('#total_price').html(parseFloat(total_price).toFixed(2));
+                        $('#total_price_value').val(parseFloat(total_price).toFixed(2));
                         $('#' + newIdValue).focus();
                     }
                     
@@ -102,27 +145,38 @@ $(document).ready(function(){
 
                                     <tr>
                                         <td colspan="2">
-                                            <form name="form1" method="post" action="">
+                                            <form name="form1" method="post" action="<?=__SITE_URL?>billing/finalize_payment">
                                               <table width="90%" border="0" align="center" cellpadding="3" cellspacing="3" id="bill_section">
                                                 <tr>
-                                                  <th>Product Code</th>
-                                                  <th>Product Name</th>
-                                                  <th>Quantity</th>
-                                                  <th>Rate</th>
-                                                  <th>Price</th>
+                                                  <th width="3%">Product Code</th>
+                                                  <th width="20%">Product Name</th>
+                                                  <th width="20%">Quantity</th>
+                                                  <th width="20%">Rate</th>
+                                                  <th width="10%">Price</th>
                                                 </tr>
                                                 <tr>
                                                   <td align="left" valign="middle"><input name="1" id="1" value="" class="productCode"></td>
                                                   <td align="left" valign="middle"><div id="product1">&nbsp;</div></td>
-                                                  <td align="left" valign="middle"><div id="quantity1"></div></td>
-                                                  <td align="left" valign="middle"><div id="rate1">&nbsp;</div></td>
-                                                  <td align="left" valign="middle"><div id="price1">&nbsp;</div></td>
+                                                  <td align="left" valign="middle"><input name='quantity1' id='quantity1' value='' onblur='javascript:manageQuantityPrice(this);'>
+                                                  	<input type='hidden' id='hdnQuantity1' name='hdnQuantity1' value=''>
+                                                  </td>
+                                                  <td align="left" valign="middle"><div id="rate1">&nbsp;</div>
+                                                  	<input type='hidden' id='hdnRate1' name='hdnRate1' value=''>
+                                                  </td>
+                                                  <td align="left" valign="middle">
+                                                      <div id="price1">&nbsp;</div>
+                                                      <input type='hidden' id='hdnPrice1' name='hdnPrice1' value='' class="hidden_price_class">
+                                                  </td>
                                                 </tr>
                                               </table>
                                               <table width="90%" border="0" align="center" cellpadding="3" cellspacing="3">
                                                 <tr>
-                                                  <td colspan="4" align="right" width="80%"><h4>Grand Total</h4></td>
-                                                  <td align="right"><h4 style="color:#FF0000; font-size:14px;">Nair <span id="total_price">0.00</span></h4></td>
+                                                  <td colspan="4" align="right" width="80%"><h4 style="color:#FF0000; font-size:14px;">Nair </h4></td>
+                                                  <td align="right"><input disabled style='text-align:right;' typé='text' name='total_price_value' id='total_price_value'><!-- <span id="total_price">0.00</span> --></td>
+                                                </tr>
+                                                <tr>
+                                                	<td colspan="4">&nbsp;</td>
+                                                    <td><input type="submit" name="btnSubmitBill" id="btnsubmitBill" value="Continue to Payment"></td>
                                                 </tr>
                                               </table>
                                           </form>
