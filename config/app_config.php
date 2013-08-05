@@ -24,8 +24,8 @@ $__template_name = "saan_template";
 
 if (LOCAL_MODE === TRUE) {
     $__host = "localhost";
-    $__user = "root";
-    $__password = "";
+    $__user = "sample";
+    $__password = "sample";
     $__database = "inventory_db";
 } else {
     $__host = "saaninfotechcom.ipagemysql.com";

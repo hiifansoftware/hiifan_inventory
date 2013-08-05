@@ -198,5 +198,14 @@ class General
             }
         }
     }
+    
+    static function dateDiff($dateStart, $dateEnd) 
+    {
+        $start = strtotime($dateStart);
+        $end = strtotime($dateEnd);
+        $days = $end - $start;
+        $days = ceil($days/86400);
+        return $days;
+    }
 
 }

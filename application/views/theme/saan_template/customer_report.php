@@ -11,7 +11,7 @@ $(function () {
                 spacingRight: 20
             },
             title: {
-                text: "<?php echo ucwords($ReportType); ?> " + 'Recharge Report'
+                text: "<?php echo ucwords($ReportType); ?> " + 'Customer Registration Report'
             },
             subtitle: {
                 text: document.ontouchstart === undefined ?
@@ -27,7 +27,7 @@ $(function () {
             },
             yAxis: {
                 title: {
-                    text: 'Recharge Value'
+                    text: 'Customer Registration Number'
                 }
             },
             tooltip: {
@@ -61,7 +61,7 @@ $(function () {
     
             series: [{
                 type: 'area',
-                name: 'Recharge Value to Recharge Date',
+                name: 'Customer Registration Number to Date',
                 pointInterval: 24 * 3600 * 1000,
                 pointStart: Date.UTC(<?php echo $FirstDayArray[0]; ?>, <?php echo ($FirstDayArray[1]-1); ?>, <?php echo $FirstDayArray[2]; ?>),
                 data: [<?php echo $ReportValue; ?>]

@@ -77,7 +77,8 @@ class customerModel extends SaanModel{
                 $dataArray = array('customer_id' => $customerIdValue,
                                     'recharge_value' => $postArray['recharge_amount_card'],
                                     'recharge_by' => 'card',
-                                    'recharge_datetime' => time());
+                                    'recharge_datetime' => time(),
+                                    'report_date' => date("Y-m-d"));
                 return $this->db->query_insert('recharge_details', $dataArray);
             }
         }

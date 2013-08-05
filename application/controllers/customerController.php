@@ -68,6 +68,7 @@ class customerController extends SaanController{
                                     {
                                         $postArray['customer_reg_date'] = time();
                                         $postArray['customer_dob'] = strtotime($postArray['customer_dob']);
+                                        $postArray['report_date'] = date("Y-m-d");
                                         unset($postArray['btnSubmit']);
                                         $customerNum = $this->registry->model->run('getCustomerByEmail', $postArray);
                                         if($customerNum < 1)
@@ -128,6 +129,7 @@ class customerController extends SaanController{
                                         $postArray['customer_card_number'] = $statusArray[1];
                                         $postArray['customer_reg_date'] = time();
                                         $postArray['customer_dob'] = strtotime($postArray['customer_dob']);
+                                        $postArray['report_date'] = date("Y-m-d");
                                         unset($postArray['btnSubmit']);
                                         if($this->registry->model->run('addNewCustomer', $postArray))
                                         {

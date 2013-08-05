@@ -15,23 +15,23 @@ require_once("header.php");
         var priceDiv = 'price' + idValue;
         var hdnPrice = 'hdnPrice' + idValue;
         var rateDiv = 'rate' + idValue;
-		var hiddenQuantity = 'hdnQuantity' + idValue;
+        var hiddenQuantity = 'hdnQuantity' + idValue;
         var rateValue = document.getElementById(rateDiv).innerHTML;
         var product_final_price = parseFloat(rateValue).toFixed(2) * parseInt(quantityValue);
         
-		document.getElementById(hiddenQuantity).value = quantityValue;
+        document.getElementById(hiddenQuantity).value = quantityValue;
         document.getElementById(priceDiv).innerHTML = parseFloat(product_final_price).toFixed(2);
         document.getElementById(hdnPrice).value = parseFloat(product_final_price).toFixed(2);
+        
         var hiddenCount = getHiddenInputs();
         var totalPriceValue = 0;
+        
         for(var i = 1; i < hiddenCount; i++)
         {
             var hdnPriceId = 'hdnPrice' + i;
             var hdnPriceValue = document.getElementById(hdnPriceId).value;
             totalPriceValue = parseFloat(totalPriceValue) + parseFloat(hdnPriceValue);
-			
         }
-        //document.getElementById('total_price').innerHTML = parseFloat(totalPriceValue).toFixed(2);
         document.getElementById('total_price_value').value = parseFloat(totalPriceValue).toFixed(2);
     }
     
@@ -39,16 +39,16 @@ $(document).ready(function(){
     $(document).on("blur", '.productCode', function(event){
        var productCode = $(this).val();
        var idValue = $(this).attr('id');
+       var idNumberValue = idValue;
        var productDiv = '#product' + idValue;
        var rateDiv = '#rate' + idValue;
        var priceDiv = '#price' + idValue;
        var quantityDiv = '#quantity' + idValue;
-	   var hiddenRate = '#hdnRate' + idValue;
-	   var hiddenQuantity = '#hdnQuantity' + idValue;
+       var hiddenRate = '#hdnRate' + idValue;
+       var hiddenQuantity = '#hdnQuantity' + idValue;
        var quantity = 1;
        var newIdValue = ++idValue; 
-       var total_price = $('#total_price').html();
-	   
+       var total_price = $('#total_price_value').val();
        
        var newHTML = "<tr>"+
                         "<td align='left' valign='middle'><input name='"+newIdValue+"' id='"+newIdValue+"' value='' class='productCode'></td>"+
@@ -75,20 +75,21 @@ $(document).ready(function(){
                         var productArray = jQuery.parseJSON(msg);
                         $(productDiv).html(productArray.product_name);
 						
-						//Rate Value
+                        //Rate Value
                         $(rateDiv).html(parseFloat(productArray.product_price).toFixed(2));
-						$(hiddenRate).val(parseFloat(productArray.product_price).toFixed(2));
+                        $(hiddenRate).val(parseFloat(productArray.product_price).toFixed(2));
 						
-						//Quantity Value
+                        //Quantity Value
                         $(quantityDiv).val('01');
-						$(hiddenQuantity).val('01');
-
+                        $(hiddenQuantity).val('01');
+                        
                         var product_final_price = parseFloat(productArray.product_price).toFixed(2) * parseInt(quantity);
 
                         $(priceDiv).html(parseFloat(product_final_price).toFixed(2));
                         $('#bill_section').append(newHTML);
                         $('#'+ newIdValue).removeClass().addClass('productCode uniform-input text');
                         $('#quantity'+ newIdValue).removeClass().addClass('uniform-input text');
+                        $('#hdnPrice'+ idNumberValue).val(parseFloat(product_final_price).toFixed(2));
                         total_price = parseFloat(total_price) + parseFloat(product_final_price);
                         $('#total_price_value').val(parseFloat(total_price).toFixed(2));
                         $('#' + newIdValue).focus();
@@ -172,7 +173,7 @@ $(document).ready(function(){
                                               <table width="90%" border="0" align="center" cellpadding="3" cellspacing="3">
                                                 <tr>
                                                   <td colspan="4" align="right" width="80%"><h4 style="color:#FF0000; font-size:14px;">Nair </h4></td>
-                                                  <td align="right"><input disabled style='text-align:right;' typé='text' name='total_price_value' id='total_price_value'><!-- <span id="total_price">0.00</span> --></td>
+                                                  <td align="right"><input disabled style='text-align:right;' typé='text' name='total_price_value' id='total_price_value' value='0.00'><!-- <span id="total_price">0.00</span> --></td>
                                                 </tr>
                                                 <tr>
                                                 	<td colspan="4">&nbsp;</td>
